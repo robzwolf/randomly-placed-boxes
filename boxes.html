@@ -1,0 +1,94 @@
+<div class="container">
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+  <div class="square"></div>
+</div>
+<style>
+body {
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+}
+.container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+}
+
+.square:nth-child(1) {
+  background-color: #142bc5;
+}
+
+.square:nth-child(2) {
+  background-color: #37d437;
+}
+
+.square:nth-child(3) {
+  background-color: #c52f14;
+}
+
+.square:nth-child(4) {
+  background-color: #c5149f;
+}
+
+.square:nth-child(5) {
+  background-color: #38c514;
+}
+</style>
+<script>
+let container = document.querySelector(".container");
+let squares = document.querySelectorAll(".square");
+
+let pageWidth = container.getBoundingClientRect().width;
+let pageHeight = container.getBoundingClientRect().height;
+
+const drawnSquares = [];
+
+squares.forEach((square) => {
+  const {width, top, left} = getRandomWidth();
+  square.style.width = `${width}px`;
+  square.style.height = `${width}px`;
+  square.style.position = "absolute";
+  square.style.top = `${top}px`;
+  square.style.left = `${left}px`;
+  drawnSquares.push({
+    width,
+    top,
+    left,
+    bottom: top + width,
+    right: left + width
+  });
+});
+
+function getRandomWidth() {
+  const width = Math.floor(Math.random() * 25) + 30;
+  const top = Math.floor(Math.random() * (pageHeight - width));
+  const left = Math.floor(Math.random() * (pageWidth - width));
+  const square = {width, top, left};
+  if (!overlapsWithAny(square)) {
+    // We've got a good square, return it
+    return square;
+  } else {
+    // Our square overlaps with one that's already on the page
+    // so we should generate a new square
+    return getRandomWidth();
+  }
+}
+
+function overlapsWithAny(square) {
+  if (drawnSquares.length === 0) {
+    return false;
+  } else {
+    return drawnSquares.some(ds => {
+      // Based on https://stackoverflow.com/a/12067046/2176546
+      return !(square.right < ds.left || 
+                  square.left > ds.right || 
+                  square.bottom < ds.top || 
+                  square.top > ds.bottom);
+    })
+  }
+}
+</script>
