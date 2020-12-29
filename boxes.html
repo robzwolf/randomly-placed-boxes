@@ -7,15 +7,20 @@
 </div>
 <style>
 body {
-    margin: 0;
-    padding: 0;
-    width: 100vw;
-    height: 100vh;
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
 }
+
 .container {
   position: relative;
   width: 100vw;
   height: 100vh;
+}
+
+.square {
+  position: absolute;
 }
 
 .square:nth-child(1) {
@@ -39,19 +44,18 @@ body {
 }
 </style>
 <script>
-let container = document.querySelector(".container");
-let squares = document.querySelectorAll(".square");
+const container = document.querySelector(".container");
+const squares = document.querySelectorAll(".square");
 
-let pageWidth = container.getBoundingClientRect().width;
-let pageHeight = container.getBoundingClientRect().height;
+const {width: pageWidth, height: pageHeight} = container.getBoundingClientRect();
 
 const drawnSquares = [];
 
 squares.forEach((square) => {
-  const {width, top, left} = getRandomWidth();
+  // Since this is a square, width and height are equal
+  const {width, top, left} = getRandomSquare();
   square.style.width = `${width}px`;
   square.style.height = `${width}px`;
-  square.style.position = "absolute";
   square.style.top = `${top}px`;
   square.style.left = `${left}px`;
   drawnSquares.push({
@@ -63,7 +67,7 @@ squares.forEach((square) => {
   });
 });
 
-function getRandomWidth() {
+function getRandomSquare() {
   const width = Math.floor(Math.random() * 25) + 30;
   const top = Math.floor(Math.random() * (pageHeight - width));
   const left = Math.floor(Math.random() * (pageWidth - width));
@@ -74,7 +78,7 @@ function getRandomWidth() {
   } else {
     // Our square overlaps with one that's already on the page
     // so we should generate a new square
-    return getRandomWidth();
+    return getRandomSquare();
   }
 }
 
